@@ -13,3 +13,10 @@ def filterout():
 			d[float(start)]=[speaker,duration]
 	
 	return d
+
+if __name__=="__main__":
+	
+	m=filterout()
+	print "start time  :    speaker id     : duration "
+	for ele in sorted(m):
+		print '{:>13}'.format(str(ele))+'{:>14}'.format(m[ele][0].strip())+'{:>25}'.format(m[ele][1])
