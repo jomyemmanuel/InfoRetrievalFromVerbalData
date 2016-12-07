@@ -6,8 +6,8 @@ import views
 
 urlpatterns = [
 
-	url(r'^register/$', views.Registration, name = 'Registration'),
-	url(r'^login/$', views.login, name = 'login'),
+	# url(r'^register/$', views.Registration, name = 'Registration'),
+	# url(r'^login/$', views.login, name = 'login'),
 ]
 
 if settings.DEBUG:

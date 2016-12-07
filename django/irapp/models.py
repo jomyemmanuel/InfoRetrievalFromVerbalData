@@ -10,5 +10,23 @@ class User(models.Model):
    email = models.EmailField(max_length=50,primary_key=True)
    password = models.CharField(max_length=50)
 
-   def __unicode__(self):
-    	return self.email
+class Audio(models.Model):
+	name = models.CharField(max_length=50)
+	email = models.ForeignKey(User, related_name = 'email')
+	numOfSpeakers = models.IntegerField(default=1)
+
+class Diarization(models.Model):
+	name = models.CharField(max_length=50)
+	Diarization_id = models.ForeignKey(Audio,related_name = 'id' )
+	Speaker_id = models.IntegerField()
+
+class Summary(models.Model):
+	name = models.CharField(max_length=50)
+	Summary_id = models.ForeignKey(Audio,related_name = 'id' )
+
+class TextGraph(models.Model):
+    name = models.CharField(max_length=50)
+    TextGraph_id = models.ForeignKey(Audio,related_name = 'id' )
+
+def __unicode__(self):
+  	return self.email
