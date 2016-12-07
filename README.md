@@ -1,6 +1,6 @@
 # InfoRetrievalFromVerbalData - AMAL
 
-Hereafter everything will be referred to with above folder as base
+Hereafter everything will be referred to with below folder as base
 
 ```
 1)The Base folder / absolute path root =    diarize-jruby
