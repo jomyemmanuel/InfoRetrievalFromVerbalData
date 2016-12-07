@@ -1,12 +1,9 @@
 # InfoRetrievalFromVerbalData - AMAL
 
-
-
-1)The Base folder / absolute path root =    diarize-jruby
-
-hereafter everything will be referred to with above folder as base
+Hereafter everything will be referred to with above folder as base
 
 ```
+1)The Base folder / absolute path root =    diarize-jruby
 2)User media files folder - UserFiles
 3)If you want to create a new user for now , manually create a directory within UserFiles with the username(eg:- like ive done with the folder 'amal')
 4)Put the audio file you want to diarize within this newly created user folder within UserFiles (eg:-Userfiles/amal/d.wav)
