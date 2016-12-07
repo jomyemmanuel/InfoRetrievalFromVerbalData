@@ -6,8 +6,10 @@ import views
 
 urlpatterns = [
 
-	url(r'^register/$', views.Registration, name = 'Registration'),
-	url(r'^login/$', views.login, name = 'login'),
+	url(r'^register/$', views.register, name = 'Registration'),
+	url(r'^home/$', views.home, name = 'home'),
+	url(r'^login/$', views.login, name = 'Login'),
+	url(r'^logout/$', views.logout, name = 'Logout'),
 ]
 
 if settings.DEBUG:
