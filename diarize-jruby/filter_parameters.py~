@@ -12,4 +12,4 @@ def filterout():
 		if start not in d.keys():
 			d[float(start)]=[speaker,duration]
 	
-	return d
+	return sorted(d)
