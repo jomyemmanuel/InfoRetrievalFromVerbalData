@@ -7,15 +7,18 @@ from filter_parameters import filterout
 
 #Inputting the audio file
 
-inp =raw_input("Audio Title:")
-voice=None
+inp = raw_input("Audio Title:")
+voice = None
 
-if(inp[-3:]=="wav"):
+if(inp[-3:] == "wav"):
 	voice = AudioSegment.from_wav(inp)
-elif(inp[-3:]=="mp3"):
+elif(inp[-3:] == "mp3"):
 	voice = AudioSegment.from_mp3(inp)
 
-print filterout
+d = filterout()
+
+for elem in sorted(d):
+	print elem,d[elem][0],d[elem][1]
 # start=input("Start Time:")
 # start=round(start*1000,0)
 # duration=input("Duration of Speech:")
