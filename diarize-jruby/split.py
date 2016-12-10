@@ -17,6 +17,7 @@ username = raw_input("User name:")
 ####---------Inputting the audio file-------------
 
 inp = raw_input("Audio Title:")
+os.system('mkdir ' + base + 'UserFiles/' + username + '/' + inp[:-4])
 voice = None
 
 if(inp[-3:] == "wav"):
@@ -40,7 +41,7 @@ listofspeakers = list(set(listofspeakers))
 indexcount=dict()
 
 for x in listofspeakers:
-	os.system('mkdir ' + base + 'UserFiles/' + username + '/' + x)
+	os.system('mkdir ' + base + 'UserFiles/' + username + '/' + inp[:-4] + '/' +x)
 	indexcount[x] = 1
 
 
@@ -51,5 +52,5 @@ for elem in sorted(d):
  	duration = round(float(d[elem][1])*1000,0)
  	end = start + duration
  	part = voice[start:end]
- 	part.export(base + 'UserFiles/' + username + '/' + d[elem][0].rstrip('\n').rstrip('"').lstrip('"') + '/' + str(indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')]) + '.wav', format="wav")
+ 	part.export(base + 'UserFiles/' + username + '/' + inp[:-4] + '/' + d[elem][0].rstrip('\n').rstrip('"').lstrip('"') + '/' + str(indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')]) + '.wav', format="wav")
  	indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')] = indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')] + 1
