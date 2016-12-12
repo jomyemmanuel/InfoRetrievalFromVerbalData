@@ -1,10 +1,9 @@
-f=open('filtered.log','r')
-d={}
-l=[lines for lines in f.readlines()]
-length=len(l)
 
-
-def filterout():
+def filterout(path):
+	f=open(path,'r')
+	d={}
+	l=[lines for lines in f.readlines()]
+	length=len(l)
 	for pos in xrange(0,length/3):
 		speaker =l[pos]
 		duration=l[pos+length/3]
