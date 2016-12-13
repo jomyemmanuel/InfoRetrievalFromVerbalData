@@ -10,6 +10,7 @@ urlpatterns = [
 	url(r'^home/$', views.home, name = 'home'),
 	url(r'^login/$', views.login, name = 'Login'),
 	url(r'^logout/$', views.logout, name = 'Logout'),
+	url(r'^upload/$', views.upload, name = 'Upload'),
 ]
 
 if settings.DEBUG:
