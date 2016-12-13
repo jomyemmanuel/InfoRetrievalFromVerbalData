@@ -1,0 +1,1 @@
+/home/amalmajeed/Desktop/MAINPRO/project/InfoRetrievalFromVerbalData/main.py
