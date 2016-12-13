@@ -1,1 +1,8 @@
-/home/amalmajeed/Desktop/MAINPRO/project/InfoRetrievalFromVerbalData/.gitignore
+*.pyc
+db.sqlite3
+*.mp3
+*.wav
+lib/*
+local/*
+bin/*
+include/*

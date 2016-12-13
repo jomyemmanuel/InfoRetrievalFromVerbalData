@@ -1,1 +1,2 @@
-/home/amalmajeed/Desktop/MAINPRO/project/InfoRetrievalFromVerbalData/tasks.txt
+Split the audio. [x] - Done
+Interface audio splitting with django project [] 
