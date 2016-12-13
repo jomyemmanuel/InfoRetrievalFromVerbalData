@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
-from .forms import UserForm
-from .models import User
+from .forms import UserForm, AudioForm
+from .models import User, Audio
 
 # Create your views here.
 
@@ -61,3 +61,28 @@ def logout(request):
 		response.delete_cookie('username')
 		return response
 	return HttpResponseRedirect('/home')
+
+def upload(request):
+	if 'username' in request.COOKIES:
+		username = request.COOKIES['username']
+	else:
+		HttpResponseRedirect('/login')
+	if request.method == 'POST':
+		form = AudioForm(request.POST, request.FILES)
+		if form.is_valid():
+			instance = form.save(commit = False)
+			obj = User.objects.get(email = username)
+			instance.email = obj
+			instance.save()
+############ Write a function for splitting audio here ###############
+			context = {"msg" : "Welcome from upload!!"}
+			response = render(request, "home.html", context)
+			return response
+		else:
+			form = AudioForm()
+			context = {"form" : form, "msg" : "Form not valid"}
+			return render(request, "upload.html", context)
+	else:
+		form = AudioForm()
+		context = {"form" : form}
+		return render(request, "upload.html", context)
