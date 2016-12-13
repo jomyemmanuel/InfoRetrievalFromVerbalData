@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
-from .forms import UploadFileForm
-# from .models import User
+from .forms import UserForm
+from .models import User
 
 # Create your views here.
 
