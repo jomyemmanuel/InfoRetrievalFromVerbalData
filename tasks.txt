@@ -1,1 +1,2 @@
-Split the audio.
+Split the audio. [x] - Done
+Interface audio splitting with django project [] 
