@@ -1,5 +1,5 @@
 #!/bin/bash
-ruby -rubygems hello.rb
+ruby -rubygems $1
 
 grep -ho "@speaker_id=\"[A-Z][0-9]*\"" outputfile.log > speaker.log
 grep -ho "\"[A-Z][0-9]*\"" speaker.log > filtered.log
