@@ -113,4 +113,3 @@ def upload(request):
 		form = AudioForm()
 		context = {"form" : form}
 		return render(request, "upload.html", context)
->>>>>>> jomy
