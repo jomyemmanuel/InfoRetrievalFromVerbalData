@@ -12,21 +12,21 @@ class User(models.Model):
 
 class Audio(models.Model):
 	name = models.CharField(max_length=50)
-	email = models.ForeignKey(User, related_name = 'email')
+	email = models.ForeignKey(User)
 	numOfSpeakers = models.IntegerField(default=1)
 
 class Diarization(models.Model):
 	name = models.CharField(max_length=50)
-	Diarization_id = models.ForeignKey(Audio,related_name = 'id' )
+	Diarization_id = models.ForeignKey(Audio)
 	Speaker_id = models.IntegerField()
 
 class Summary(models.Model):
 	name = models.CharField(max_length=50)
-	Summary_id = models.ForeignKey(Audio,related_name = 'id' )
+	Summary_id = models.ForeignKey(Audio)
 
 class TextGraph(models.Model):
     name = models.CharField(max_length=50)
-    TextGraph_id = models.ForeignKey(Audio,related_name = 'id' )
+    TextGraph_id = models.ForeignKey(Audio)
 
 def __unicode__(self):
   	return self.email

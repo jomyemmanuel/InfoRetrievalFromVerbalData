@@ -2,11 +2,14 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.views.static import serve
-from .views import upload
+import views
 urlpatterns = [
-url(r'^upload/$', views.upload, name = 'upload'),
-]
 
+	url(r'^upload', views.upload, name = 'upload'),
+	# url(r'^home/$', views.home, name = 'home'),
+	# url(r'^login/$', views.login, name = 'Login'),
+	# url(r'^logout/$', views.logout, name = 'Logout'),
+]
 if settings.DEBUG:
 	urlpatterns += [
 	url(r'^media/(?P<path>.*)$', serve, {
