@@ -10,7 +10,7 @@ grep -ho "[0-9]*\.[0-9]*" duration.log >> filtered.log
 grep -ho "@start=[0-9]*\.[0-9]*" outputfile.log > start.log
 grep -ho "[0-9]*\.[0-9]*" start.log>> filtered.log
 
-rm outputfile.log
+rm speaker.log duration.log start.log outputfile.log
 
 
 
