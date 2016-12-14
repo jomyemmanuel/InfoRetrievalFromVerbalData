@@ -2,3 +2,4 @@
 db.sqlite3
 *.mp3
 *.wav
+./django/irapp/migrations/*
