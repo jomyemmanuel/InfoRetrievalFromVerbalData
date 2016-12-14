@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Audio
+from .models import User,Audio
 
 # Register your models here.
 
