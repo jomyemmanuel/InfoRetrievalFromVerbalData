@@ -77,7 +77,6 @@ def upload(request):
 			instance = form.save(commit = False)
 			username = request.COOKIES['username']
 			obj = User.objects.get(email = username)
-			filename = Audio.objects.select_related().filter(email=username)
 			instance.email = obj
 			instance.save()
 			d = filter_parameters.filterout(os.getcwd()+'/irapp/diarization/diarizejruby/'+'filtered.log')
