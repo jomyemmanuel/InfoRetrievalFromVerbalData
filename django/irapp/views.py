@@ -79,8 +79,8 @@ def upload(request):
 			instance.email = obj
 			instance.save()
 ############ Write a function for splitting audio here ###############
-			d=filter_parameters.filterout(os.getcwd()+'/diarization/diarizejruby/'+'filtered.log')
-			base_dir=os.path.abspath(__file__ + "/../")
+			d=filter_parameters.filterout(os.getcwd()+'/irapp/diarization/diarizejruby/'+'filtered.log')
+			base_dir=os.path.abspath(__file__ + "/../../")
 			split(base_dir,d)
 			context = {"msg" : "Welcome from upload!!"}
 			response = render(request, "home.html", context)

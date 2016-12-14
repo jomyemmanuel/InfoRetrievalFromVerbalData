@@ -9,6 +9,7 @@ import os
 def split(base,d):
 	username = raw_input("User name:")
 	inp = raw_input("Audio Title:")
+	os.system('mkdir ' + base + '/media/' + username)
 	os.system('mkdir ' + base + '/media/' + username + '/' + inp[:-4])
 	voice = None
 	if(inp[-3:] == "wav"):
