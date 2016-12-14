@@ -77,13 +77,15 @@ def upload(request):
 			instance = form.save(commit = False)
 			username = request.COOKIES['username']
 			obj = User.objects.get(email = username)
-			filename = Audio.objects.select_related().filter(email=username)
 			instance.email = obj
 			instance.save()
+			filename = Audio.objects.select_related().filter(email=username).order_by('-id')[0]
+		
 ############ Write a function for splitting audio here ###############
-			d=filter_parameters.filterout(os.getcwd()+'/irapp/diarization/diarizejruby/'+'filtered.log')
+			d=filter_parameters.filterout(os.getcwd()+
+				     '/irapp/diarization/diarizejruby/'+'filtered.log')
 			base_dir=os.path.abspath(__file__ + "/../../")
-			split(base_dir,d,username,filename[0].name.name)
+			split(base_dir,d,username,str(filename))
 			context = {"msg" : "Welcome from upload!!"}
 			response = render(request, "home.html", context)
 			return response

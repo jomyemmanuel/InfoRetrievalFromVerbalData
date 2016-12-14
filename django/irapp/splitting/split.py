@@ -32,5 +32,8 @@ def split(base,d,user,fname):
  		duration = round(float(d[elem][1])*1000,0)
  		end = start + duration
  		part = voice[start:end]
- 		part.export(base + '/media/' + username + '/' + inp[6:-4] + '/' + d[elem][0].rstrip('\n').rstrip('"').lstrip('"') + '/' + str(indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')]) + '.wav', format="wav")
+ 		part.export(base + '/media/' + username + '/' + inp[6:-4] +
+ 		 '/' + d[elem][0].rstrip('\n').rstrip('"').lstrip('"') + '/' + 
+ 		 str(indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')]) + 
+ 		 '.wav', format="wav")
  		indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')] = indexcount[d[elem][0].rstrip('\n').rstrip('"').lstrip('"')] + 1
