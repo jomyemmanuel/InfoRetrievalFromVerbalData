@@ -42,7 +42,7 @@ class Audio(models.Model):
 	numOfSpeakers = models.IntegerField(default=1)
 
 	def __unicode__(self):
-		return self.name
+		return self.name.name
 
 class Diarization(models.Model):
 	Diarization_id = models.ForeignKey(Audio)
