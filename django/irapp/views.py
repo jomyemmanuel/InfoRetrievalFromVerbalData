@@ -81,9 +81,9 @@ def upload(request):
 			instance.save()
 ############ Write a function for splitting audio here ###############
 
-			
+			audio_path='file://'+os.getcwd()+'/media/'+str(instance.name)
 			path_ruby=os.getcwd()+'/irapp/diarization/diarizejruby/hello.rb'
-			subprocess.call(['./irapp/diarization/diarizejruby/parse.sh',path_ruby])
+			subprocess.call(['./irapp/diarization/diarizejruby/parse.sh',path_ruby,audio_path])
 			
 			d = filter_parameters.filterout(os.getcwd()+'/filtered.log')
 			base_dir = os.path.abspath(__file__ + "/../../")
