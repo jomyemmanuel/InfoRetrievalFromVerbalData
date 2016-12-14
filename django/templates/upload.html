@@ -1,6 +1,13 @@
 <h1>Login</h1>
+<<<<<<< HEAD
 <form method="post"	 enctype="multipart/form-data" class="post-form">{% csrf_token %}
 		File: <input type="file" name="file"> <br>
 		{{ msg }}
 	<button	type="submit"	class="save	btn	btn-default">Submit</button>
+=======
+<form method="post"	action="/upload/" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+	 {{form.as_p}}
+		{{ msg }}
+	<button	type="submit"	class="save	btn	btn-default">Upload</button>
+>>>>>>> jomy
 </form>

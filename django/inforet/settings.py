@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'irapp',
+=======
+    'irapp'
+>>>>>>> jomy
 ]
 
 MIDDLEWARE = [
@@ -124,4 +128,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 MEDIA_URL = '/media/'
+<<<<<<< HEAD
 MEDIA_ROOT = os.path.join(BASE_DIR, "static/media")
+=======
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+>>>>>>> jomy
