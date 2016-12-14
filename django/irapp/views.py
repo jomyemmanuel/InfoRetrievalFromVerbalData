@@ -79,18 +79,17 @@ def upload(request):
 			obj = User.objects.get(email = username)
 			instance.email = obj
 			instance.save()
-			print instance.name
-			filename = Audio.objects.select_related().filter(email=username).order_by('-id')[0]
-		
+<<<<<<< HEAD
 ############ Write a function for splitting audio here ###############
 
 			path_bash=os.getcwd()+'/diarization/diarizejruby/parse.sh'
 			path_ruby=os.getcwd()+'/diarization/diarizejruby/hello.rb'
 			subprocess.call([path_bash,path_ruby])
-			d=filter_parameters.filterout(os.getcwd()+
-				     '/irapp/diarization/diarizejruby/'+'filtered.log')
-			base_dir=os.path.abspath(__file__ + "/../../")
-			split(base_dir,d,username,str(filename))
+=======
+			d = filter_parameters.filterout(os.getcwd()+'/irapp/diarization/diarizejruby/'+'filtered.log')
+			base_dir = os.path.abspath(__file__ + "/../../")
+			split(base_dir,d,username,str(instance.name))
+>>>>>>> 9d48046aeed498b06a3d653272a5e79596db5a8
 			context = {"msg" : "Welcome from upload!!"}
 			response = render(request, "home.html", context)
 			return response
