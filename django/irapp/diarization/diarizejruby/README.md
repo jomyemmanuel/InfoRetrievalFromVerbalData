@@ -9,6 +9,7 @@ Name the audio file to be diarized as d.wav.Run the below mentioned steps.
 Example use
 -----------
     $ rvm use jruby 1.7.23
+    $ jruby -S gem install diarize-jruby ( inside diarizejruby folder )
     $ chmod 777 hello.rb
     $ chmod 777 parse.sh
     $ ./parse.sh
