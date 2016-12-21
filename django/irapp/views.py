@@ -7,6 +7,7 @@ import subprocess
 import os
 from diarization.diarizejruby import filter_parameters 
 from splitting.split import split
+from joining.joinscript import join
 # Create your views here.
 
 def register(request):
@@ -87,7 +88,11 @@ def upload(request):
 			
 			d = filter_parameters.filterout(os.getcwd()+'/filtered.log')
 			base_dir = os.path.abspath(__file__ + "/../../")
-			split(base_dir,d,username,str(instance.name))
+			listofspeakers=split(base_dir,d,username,str(instance.name))
+			
+			pause = input("Enter a number")
+			join(base_dir,d,username,str(instance.name),listofspeakers)
+			
 			context = {"msg" : "Welcome from upload!!"}
 			response = render(request, "home.html", context)
 			return response
