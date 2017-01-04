@@ -8,6 +8,7 @@ import os
 from diarization.diarizejruby import filter_parameters 
 from splitting.split import split
 from joining.joinscript import join
+from speechmatics.individual import inditrans
 # Create your views here.
 
 def register(request):
@@ -80,18 +81,23 @@ def upload(request):
 			obj = User.objects.get(email = username)
 			instance.email = obj
 			instance.save()
-############ Write a function for splitting audio here ###############
 
-			audio_path='file://'+os.getcwd()+'/media/'+str(instance.name)
-			path_ruby=os.getcwd()+'/irapp/diarization/diarizejruby/hello.rb'
-			subprocess.call(['./irapp/diarization/diarizejruby/parse.sh',path_ruby,audio_path])
-			
-			d = filter_parameters.filterout(os.getcwd()+'/filtered.log')
-			base_dir = os.path.abspath(__file__ + "/../../")
-			listofspeakers=split(base_dir,d,username,str(instance.name))
-			
-			pause = input("Enter a number")
-			join(base_dir,d,username,str(instance.name),listofspeakers)
+############ Write a function for splitting audio here ###############
+			#audio_path=os.getcwd()+'/media/'+str(instance.name)
+			#print str(instance.name)[6:-4]
+			#audio_path='file://'+os.getcwd()+'/media/'+str(instance.name)
+			#path_ruby=os.getcwd()+'/irapp/diarization/diarizejruby/hello.rb'
+			#subprocess.call(['./irapp/diarization/diarizejruby/parse.sh',path_ruby,audio_path])
+			api_id = raw_input("Enter api user id for speechmatics :")
+			api_token = raw_input("Enter api token for speechmatics :")
+			lang = raw_input("Enter language code spoken(en-US/en-GB) :")
+			#d = filter_parameters.filterout(os.getcwd()+'/filtered.log')
+			#base_dir = os.path.abspath(__file__ + "/../../")
+			#listofspeakers=split(base_dir,d,username,str(instance.name))
+			#inditrans(base_dir,d,username,str(instance.name),listofspeakers,api_id,api_token,lang)
+			#join(base_dir,d,username,str(instance.name),listofspeakers)
+			os.system("mkdir " + os.getcwd() + '/media/' + username)
+			os.system("python " + os.getcwd()+ "/irapp/speechmatics/speechmatics.py -f " + audio_path + " -l " + lang + " -i " + api_id + " -t " + api_token + " -x -o " + os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt')
 			
 			context = {"msg" : "Welcome from upload!!"}
 			response = render(request, "home.html", context)
