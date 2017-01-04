@@ -2,5 +2,5 @@
 db.sqlite3
 *.mp3
 *.wav
-./django/irapp/migrations/*
+django/irapp/migrations/*
 speech-to-text-wavenet/
