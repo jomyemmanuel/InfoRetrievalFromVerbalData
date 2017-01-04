@@ -1,0 +1,26 @@
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">Home</a>
+      {% if request.COOKIES.username %}
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/logout">logout</a></li>
+      </ul>
+      {% else %}
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/login">login</a></li>
+      </ul>
+      {% endif %}
+
+      {% if request.COOKIES.username %}
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="/login">login</a></li>
+      </ul>
+      {% else %}
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="/logout">logout</a></li>
+      </ul>
+      {% endif %}
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  {% block content %}
+  {% endblock %}

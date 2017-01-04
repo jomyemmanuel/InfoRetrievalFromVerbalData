@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404, redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from .forms import UserForm, AudioForm
 from .models import User, Audio
@@ -14,7 +14,7 @@ from speechmatics.individual import inditrans
 def register(request):
 	if 'username' in request.COOKIES:
 		usernamejudge = request.COOKIES['username']
-		return HttpResponseRedirect('/home')
+		return HttpResponseRedirect('/')
 	if request.method == 'POST':
 		a = User.objects.filter(email = request.POST['email'])
 		if len(a) != 0:
@@ -26,8 +26,8 @@ def register(request):
 			instance = form.save(commit = False)
 			instance.password = form.cleaned_data['email'] + "|" + form.cleaned_data['password']
 			instance.save()
-			context = {"msg" : "Welcome from Register!!"}
-			response = render(request, "home.html", context)
+			context = {"msg" : "Welcome from Register!!", "token" : "loggedIn"}
+			response = render(request, "index.html", context)
 			response.set_cookie("username", form.cleaned_data['email'])
 			return response
 		else:
@@ -50,8 +50,8 @@ def login(request):
 			context = {"msg" : "Invalid User!!"}
 			response = render(request, "login.html", context)
 			return response		
-		context = {"msg" : "Welcome User from Login!!"}
-		response = render(request, "home.html", context)
+		context = {"msg" : "Welcome User from Login!!", "token" : "loggedIn"}
+		response = render(request, "upload.html", context)
 		response.set_cookie("username", a[0])
 		return response
 	else:
@@ -66,16 +66,17 @@ def index(request):
 def logout(request):
 	if 'username' in request.COOKIES:
 		context = {"msg" : "Logged Out"}
-		response = render(request, "home.html", context)
+		# response = render(request, "index.html", context)
+		response = redirect('/')
 		response.delete_cookie('username')
 		return response
-	return HttpResponseRedirect('/home')
+	return HttpResponseRedirect('/')
 
 def upload(request):
 	if 'username' in request.COOKIES:
 		username = request.COOKIES['username']
 	else:
-		HttpResponseRedirect('/login')
+		return HttpResponseRedirect('/login')
 	if request.method == 'POST':
 		form = AudioForm(request.POST, request.FILES)
 		if form.is_valid():
