@@ -58,6 +58,9 @@ def login(request):
 def home(request):
 	return render(request, "home.html")
 
+def index(request):
+	return render(request, "index.html")
+
 def logout(request):
 	if 'username' in request.COOKIES:
 		context = {"msg" : "Logged Out"}
