@@ -83,7 +83,7 @@ def upload(request):
 			instance.save()
 
 ############ Write a function for splitting audio here ###############
-			#audio_path=os.getcwd()+'/media/'+str(instance.name)
+			audio_path=os.getcwd()+'/media/'+str(instance.name)
 			#print str(instance.name)[6:-4]
 			#audio_path='file://'+os.getcwd()+'/media/'+str(instance.name)
 			#path_ruby=os.getcwd()+'/irapp/diarization/diarizejruby/hello.rb'
