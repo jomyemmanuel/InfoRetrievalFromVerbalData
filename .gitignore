@@ -4,3 +4,4 @@ db.sqlite3
 *.wav
 django/irapp/migrations/*
 speech-to-text-wavenet/
+django/media/*
