@@ -6,10 +6,17 @@ from .models import User, Audio
 import subprocess
 import os
 from diarization.diarizejruby import filter_parameters 
+from readless.Summarization import clusterrank
 from splitting.split import split
 from joining.joinscript import join
 from speechmatics.individual import inditrans
+
+from random import randint
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
+
 # Create your views here.
+
 
 def register(request):
 	if 'username' in request.COOKIES:
@@ -26,8 +33,7 @@ def register(request):
 			instance = form.save(commit = False)
 			instance.password = form.cleaned_data['email'] + "|" + form.cleaned_data['password']
 			instance.save()
-			context = {"msg" : "Welcome from Register!!", "token" : "loggedIn"}
-			response = render(request, "index.html", context)
+			response = redirect('/upload')
 			response.set_cookie("username", form.cleaned_data['email'])
 			return response
 		else:
@@ -50,8 +56,7 @@ def login(request):
 			context = {"msg" : "Invalid User!!"}
 			response = render(request, "login.html", context)
 			return response		
-		context = {"msg" : "Welcome User from Login!!", "token" : "loggedIn"}
-		response = render(request, "upload.html", context)
+		response = redirect('/upload')
 		response.set_cookie("username", a[0])
 		return response
 	else:
@@ -92,9 +97,9 @@ def upload(request):
 			#audio_path='file://'+os.getcwd()+'/media/'+str(instance.name)
 			#path_ruby=os.getcwd()+'/irapp/diarization/diarizejruby/hello.rb'
 			#subprocess.call(['./irapp/diarization/diarizejruby/parse.sh',path_ruby,audio_path])
-			api_id = raw_input("Enter api user id for speechmatics :")
-			api_token = raw_input("Enter api token for speechmatics :")
-			lang = raw_input("Enter language code spoken(en-US/en-GB) :")
+			api_id = '14783' #raw_input("Enter api user id for speechmatics :")
+			api_token = 'MDI1NzlhN2YtZTdmNy00Yjc1LWFiNmYtNjQ2NmVlYTg5YjY4' #raw_input("Enter api token for speechmatics :")
+			lang = "en-GB" #raw_input("Enter language code spoken(en-US/en-GB) :")
 			#d = filter_parameters.filterout(os.getcwd()+'/filtered.log')
 			#base_dir = os.path.abspath(__file__ + "/../../")
 			#listofspeakers=split(base_dir,d,username,str(instance.name))
@@ -102,8 +107,31 @@ def upload(request):
 			#join(base_dir,d,username,str(instance.name),listofspeakers)
 			os.system("mkdir " + os.getcwd() + '/media/' + username)
 			os.system("python " + os.getcwd()+ "/irapp/speechmatics/speechmatics.py -f " + audio_path + " -l " + lang + " -i " + api_id + " -t " + api_token + " -x -o " + os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt')
-			
-			context = {"msg" : "Welcome from upload!!"}
+			print str(instance.name)
+			d = {}
+			string=''
+			transcribed_path = os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt'
+			print transcribed_path
+			with open(transcribed_path ,'r') as f:
+				for line in f:
+					key = str(line.rstrip('\n'))
+					print key
+					line = f.next()
+					if not line:
+						break
+					val = str(line.rstrip('\n'))
+					print val
+					if key not in d.keys():
+						d[key] = val
+					else:
+						d[key] += val
+					string += val
+			d['summary'] = string
+			with open(transcribed_path, 'w') as f:
+				f.write(string + '\n.\n')
+			clusterrank_obj = clusterrank.ClusterRank()
+			summary = clusterrank_obj.summarizeFile(transcribed_path)
+			context = {"msg" : summary}
 			response = render(request, "home.html", context)
 			return response
 		else:
@@ -114,3 +142,20 @@ def upload(request):
 		form = AudioForm()
 		context = {"form" : form}
 		return render(request, "upload.html", context)
+
+
+class LineChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        """Return 7 labels."""
+        return ["January", "February", "March", "April", "May", "June", "July"]
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+
+        return [[75, 44, 92, 11, 44, 95, 35],
+                [41, 92, 18, 3, 73, 87, 92],
+                [87, 21, 94, 3, 90, 13, 65]]
+
+
+line_chart = TemplateView.as_view(template_name='line_chart.html')
+line_chart_json = LineChartJSONView.as_view()
