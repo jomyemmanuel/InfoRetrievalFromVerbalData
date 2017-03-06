@@ -1,10 +1,16 @@
-<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-$( document ).ready(function() {
-    var data = {
-        labels: ['food','cost','ambience','service'],
-        datasets: [
+<html>
+<head>
+    <title>Graph</title>
+</head>
+<body>
+    <canvas id="myChart" width="500" height="300"></canvas>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    $( document ).ready(function() {
+        var data = {
+            labels: ['food','cost','ambience','service'],
+            datasets: [
             {
                 label: "Site Registrations in the Last 30 Days",
                 fillColor: "rgba(220,220,220,0.2)",
@@ -15,19 +21,11 @@ $( document ).ready(function() {
                 pointHighlightStroke: "rgba(220,220,220,1)",
                 data: [3,4,5,6]
             }
-        ]
-    };
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myLineChart = new Chart(ctx).Line(data);
-});
-</script>
-
-
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="/static/css/reset.css" />
-<canvas id="myChart" width="500" height="300"></canvas>
-  
-</head>
-<body>
+            ]
+        };
+        var ctx = document.getElementById("myChart").getContext("2d");
+        var myLineChart = new Chart(ctx).Line(data);
+    });
+    </script>
+</body>
 </html>

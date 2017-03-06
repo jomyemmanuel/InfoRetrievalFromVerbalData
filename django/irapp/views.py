@@ -3,17 +3,16 @@ from django.http import HttpResponse,HttpResponseRedirect
 from .forms import UserForm, AudioForm
 from .models import User, Audio
 
-import subprocess
-import os
-from diarization.diarizejruby import filter_parameters 
 from readless.Summarization import clusterrank
-from splitting.split import split
-from joining.joinscript import join
 from speechmatics.individual import inditrans
+from classifier import svm
 
 from random import randint
 from django.views.generic import TemplateView
 # from chartjs.views.lines import BaseLineChartView
+
+import subprocess
+import os
 
 # Create your views here.
 
@@ -90,37 +89,22 @@ def upload(request):
 			obj = User.objects.get(email = username)
 			instance.email = obj
 			instance.save()
-
-############ Write a function for splitting audio here ###############
 			audio_path=os.getcwd()+'/media/'+str(instance.name)
-			#print str(instance.name)[6:-4]
-			#audio_path='file://'+os.getcwd()+'/media/'+str(instance.name)
-			#path_ruby=os.getcwd()+'/irapp/diarization/diarizejruby/hello.rb'
-			#subprocess.call(['./irapp/diarization/diarizejruby/parse.sh',path_ruby,audio_path])
-			api_id = '14783' #raw_input("Enter api user id for speechmatics :")
-			api_token = 'MDI1NzlhN2YtZTdmNy00Yjc1LWFiNmYtNjQ2NmVlYTg5YjY4' #raw_input("Enter api token for speechmatics :")
+			api_id = '14800' #raw_input("Enter api user id for speechmatics :")
+			api_token = 'MzgxNjc2NDQtNjZkOS00NjY2LTgxNzQtZWM3NGZjZDZkNWYy' #raw_input("Enter api token for speechmatics :")
 			lang = "en-GB" #raw_input("Enter language code spoken(en-US/en-GB) :")
-			#d = filter_parameters.filterout(os.getcwd()+'/filtered.log')
-			#base_dir = os.path.abspath(__file__ + "/../../")
-			#listofspeakers=split(base_dir,d,username,str(instance.name))
-			#inditrans(base_dir,d,username,str(instance.name),listofspeakers,api_id,api_token,lang)
-			#join(base_dir,d,username,str(instance.name),listofspeakers)
 			os.system("mkdir " + os.getcwd() + '/media/' + username)
 			os.system("python " + os.getcwd()+ "/irapp/speechmatics/speechmatics.py -f " + audio_path + " -l " + lang + " -i " + api_id + " -t " + api_token + " -x -o " + os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt')
-			print str(instance.name)
 			d = {}
 			string=''
 			transcribed_path = os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt'
-			print transcribed_path
 			with open(transcribed_path ,'r') as f:
 				for line in f:
 					key = str(line.rstrip('\n'))
-					print key
 					line = f.next()
 					if not line:
 						break
 					val = str(line.rstrip('\n'))
-					print val
 					if key not in d.keys():
 						d[key] = val
 					else:
@@ -131,7 +115,9 @@ def upload(request):
 				f.write(string + '\n.\n')
 			clusterrank_obj = clusterrank.ClusterRank()
 			summary = clusterrank_obj.summarizeFile(transcribed_path)
-			context = {"msg" : summary}
+			graph_obj = svm.Svm()
+			details = graph_obj.call_multiple(d)
+			context = {"msg" : summary, "graph" : details}
 			response = render(request, "home.html", context)
 			return response
 		else:
@@ -145,7 +131,6 @@ def upload(request):
 
 
 def test_graph(request):
-	print "SDF"
 	return render(request, "test.html")
 
 # class LineChartJSONView(BaseLineChartView):
