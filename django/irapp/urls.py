@@ -12,8 +12,8 @@ urlpatterns = [
 	url(r'^login/$', views.login, name = 'Login'),
 	url(r'^logout/$', views.logout, name = 'Logout'),
 	url(r'^upload/$', views.upload, name = 'Upload'),
-    url(r'^line_chart_json/$', views.line_chart_json,
-        name='line_chart_json'),
+    url(r'^testgraph/$', views.test_graph,
+        name='Test_graph'),
 ]
 
 
