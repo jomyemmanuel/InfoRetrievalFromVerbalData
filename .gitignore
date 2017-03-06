@@ -5,3 +5,4 @@ db.sqlite3
 django/irapp/migrations/*
 speech-to-text-wavenet/
 django/media/*
+my_dumped_classifier.pkl
