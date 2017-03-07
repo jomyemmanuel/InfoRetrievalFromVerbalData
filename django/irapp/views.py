@@ -116,7 +116,8 @@ def upload(request):
 			clusterrank_obj = clusterrank.ClusterRank()
 			summary = clusterrank_obj.summarizeFile(transcribed_path)
 			graph_obj = svm.Svm()
-			details = graph_obj.call_multiple(d)
+			graph_obj.call_multiple(d)
+			details=graph_obj.total
 			context = {"msg" : summary, "graph" : details}
 			response = render(request, "home.html", context)
 			return response

@@ -9,9 +9,9 @@ import numpy as np
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 import cPickle
+import os
 
-csv_path = '/home/jomy/Code/mec/mainpro/webapp/InfoRetrievalFromVerbalData/django/irapp/classifier/out.csv'
-
+csv_path = os.getcwd() + '/irapp/classifier/out.csv'
 class Sentimental:
     def load_file(self):
         with open(csv_path) as csv_file:

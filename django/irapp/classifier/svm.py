@@ -8,9 +8,9 @@ from sklearn.metrics import accuracy_score
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import MultiLabelBinarizer
 from sentimental import *
+import os
 
-oldfile = "/home/jomy/Code/mec/mainpro/webapp/InfoRetrievalFromVerbalData/django/irapp/classifier/new_reviews_yaa.txt"
-# accuracy_check = "new_yaa"
+oldfile = os.getcwd() + '/irapp/classifier/new_reviews_yaa.txt'
 
 d={'SPEAKER: M1': 'I was in the United Kingdom when I was told I could be closer.', 'SPEAKER: M3': 'That the rules and regulations governing the whole. Are people moving with you on a pension basis so people moving to other countries.', 'SPEAKER: M2': "Brian thank you very much. She's obviously tough living out there Sandra Humphries in SC. What do you think.It's out freezing now is the cold is based on the world.You said how much should you simplify the pensions and everyone gets the same I don't care how you distinguish between somebody living in Scotland and somebody living in the south of Spain.", 'SPEAKER: F1': "No I don't think they should get it because is my idol out there than it is over here.Can they really do get when they get cold weather. But I don't see why anybody in Spain should get it. They're not paying for fuel in this country.", 'summary': "I was in the United Kingdom when I was told I could be closer.Brian thank you very much. She's obviously tough living out there Sandra Humphries in SC. What do you think.No I don't think they should get it because is my idol out there than it is over here.It's out freezing now is the cold is based on the world.Can they really do get when they get cold weather. But I don't see why anybody in Spain should get it. They're not paying for fuel in this country.You said how much should you simplify the pensions and everyone gets the same I don't care how you distinguish between somebody living in Scotland and somebody living in the south of Spain.That the rules and regulations governing the whole. Are people moving with you on a pension basis so people moving to other countries."}
 
@@ -19,6 +19,8 @@ class Svm:
 
     def __init__(self):
         self.total=[]
+        self.categories=[]
+        self.sentiments=[]
         self.review_category_split()
 
     def review_category_split(self): 
@@ -69,6 +71,7 @@ class Svm:
       s = Sentimental()
       s.main()
       self.sentiment_value=s.use_model([string])
+      self.sentiments.append(self.sentiment_value[0])
 
 
     def sentiment_category_merge(self):
@@ -77,6 +80,7 @@ class Svm:
           for values in ele :
               if values not in m.keys():
                   m[values] = self.sentiment_value[0]
+                  self.categories.append(values)
 
       self.total.append(m)
 
@@ -93,15 +97,14 @@ string = "Strictly an average place. They got a big menu but most of the things 
 
 if __name__=="__main__":
   obj = Svm()
-  obj.review_category_split()
-      
-  for ele in d:
-    if ele != 'summary':
-      obj.category_prediction(d[ele])
-      obj.sentiment_prediction(d[ele])
-      obj.sentiment_category_merge()
+  obj.category_prediction(string)
+  obj.sentiment_prediction(string)
+  obj.sentiment_category_merge()
 
-  print obj.total
+  print string
+  print obj.categories
+  print obj.sentiments
+  # print obj.total
 # y_test = [[]]
 
 # print accuracy_score(y_test, predicted)
