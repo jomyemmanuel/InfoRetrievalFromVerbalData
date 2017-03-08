@@ -120,13 +120,11 @@ def upload(request):
 			api_token = 'MzgxNjc2NDQtNjZkOS00NjY2LTgxNzQtZWM3NGZjZDZkNWYy' #raw_input("Enter api token for speechmatics :")
 			lang = "en-GB" #raw_input("Enter language code spoken(en-US/en-GB) :")
 			os.system("mkdir " + os.getcwd() + '/media/' + username)
-			# os.system("python " + os.getcwd()+ "/irapp/speechmatics/speechmatics.py -f " + audio_path + " -l " + lang + " -i " + api_id + " -t " + api_token + " -x -o " + os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt')
+			os.system("python " + os.getcwd()+ "/irapp/speechmatics/speechmatics.py -f " + audio_path + " -l " + lang + " -i " + api_id + " -t " + api_token + " -x -o " + os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt')
 			d = {}
 			string = ''
 			transcribed_path = os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt'
-			old_path = os.getcwd() + "/static/" + 'read.txt'
-			new_path = os.getcwd() + "/static/" + 'abcd.txt'
-			with open(old_path ,'r') as f:
+			with open(transcribed_path ,'r') as f:
 				for line in f:
 					key = str(line.rstrip('\n'))
 					line = f.next()
@@ -139,10 +137,10 @@ def upload(request):
 						d[key] += val
 					string += val
 			d['summary'] = string
-			with open(new_path, 'w') as f:
+			with open(transcribed_path, 'w') as f:
 				f.write(string + '\n.\n')
 			clusterrank_obj = clusterrank.ClusterRank()
-			summary = clusterrank_obj.summarizeFile(new_path)
+			summary = clusterrank_obj.summarizeFile(transcribed_path)
 			summary = summary[:summary.rfind('.') + 1]
 			with open(transcribed_path, 'w') as f:
 				f.write(summary)
@@ -161,7 +159,7 @@ def upload(request):
 				for key, val in i.items():
 					count_sentiment(sentiment_object, key, val)
 			sentiment_object.save()
-			csv_path = os.getcwd() + '/static' + '/data.csv'
+			csv_path = os.getcwd() + '/media' + '/data.csv'
 			with open(csv_path , "w") as f:
 				f.write("State,Postive,Neutral,Negative\n")
 				if sentiment_object.ambience_count != 0:
