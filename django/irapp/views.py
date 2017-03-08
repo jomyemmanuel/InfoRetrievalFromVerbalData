@@ -151,9 +151,7 @@ def upload(request):
 			details = graph_obj.call_multiple(d)
 			try:
 				sentiment_object = Sentiment.objects.get(sentimentId__email=user_object)
-				print "bye"
 			except Sentiment.DoesNotExist:
-				print "hello"
 				sentiment_object = Sentiment(sentimentId=audio_object)
 			for i in details:
 				for key, val in i.items():
