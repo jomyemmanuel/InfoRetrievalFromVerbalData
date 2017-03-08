@@ -1,3 +1,0 @@
-Split the audio. [x] - Done
-Interface audio splitting with django project [x] - Done
-Aggregate and tag speakers for individual audio transcripts [x] - Done 

@@ -17,14 +17,38 @@ class Audio(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.FileField(upload_to="audio")
 	email = models.ForeignKey(User)
-	numOfSpeakers = models.IntegerField(default=1)
 
 	def __unicode__(self):
 		return self.name.name
 
-class Diarization(models.Model):
-	Diarization_id = models.ForeignKey(Audio)
-	Speaker_id = models.IntegerField()
+def get_upload_to(instance, filename):
+    return 'upload/%d/%s' % (instance.profile, filename)
 
+class Summary(models.Model):
+	summaryId = models.ForeignKey(Audio)
+	name = models.FileField(upload_to=get_upload_to)
+	
 	def __unicode__(self):
-	   	return self.Diarization_id
+	   	return self.name.name
+
+class Sentiment(models.Model):
+	sentimentId = models.ForeignKey(Audio)
+	food_count = models.IntegerField(default=0)
+	food_good_count = models.IntegerField(default=0)
+	food_bad_count = models.IntegerField(default=0)
+	food_neutral_count = models.IntegerField(default=0)
+	ambience_count = models.IntegerField(default=0)
+	ambience_good_count = models.IntegerField(default=0)
+	ambience_bad_count = models.IntegerField(default=0)
+	ambience_neutral_count = models.IntegerField(default=0)
+	service_count = models.IntegerField(default=0)
+	service_good_count = models.IntegerField(default=0)
+	service_bad_count = models.IntegerField(default=0)
+	service_neutral_count = models.IntegerField(default=0)
+	cost_count = models.IntegerField(default=0)
+	cost_good_count = models.IntegerField(default=0)
+	cost_bad_count = models.IntegerField(default=0)
+	cost_neutral_count = models.IntegerField(default=0)
+	
+	def __unicode__(self):
+	   	return str(self.food_count)

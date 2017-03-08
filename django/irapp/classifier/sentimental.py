@@ -1,17 +1,17 @@
-import csv
-
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import BernoulliNB
 from sklearn import cross_validation
 from sklearn.metrics import classification_report
-import numpy as np
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 import cPickle
+import csv
+import numpy as np
 import os
 
 csv_path = os.getcwd() + '/irapp/classifier/out.csv'
+
 class Sentimental:
     def load_file(self):
         with open(csv_path) as csv_file:
@@ -26,7 +26,6 @@ class Sentimental:
                     target.append(row[1])
 
             return data,target
-
 
     # preprocess creates the term frequency matrix for the review data set
     def preprocess(self):
@@ -76,9 +75,6 @@ if __name__ == "__main__":
     m = sentimental()
     m.main()
     # m.use_model(['food is really bad and worse ever, never try'])
-
-   
-
     # load it again
     # with open('my_dumped_classifier.pkl', 'rb') as fid:
     #     gnb_loaded = cPickle.load(fid)

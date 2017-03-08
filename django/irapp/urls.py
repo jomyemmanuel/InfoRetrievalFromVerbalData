@@ -8,12 +8,9 @@ urlpatterns = [
 
 	url(r'^$', views.index, name = 'Index'),
 	url(r'^register/$', views.register, name = 'Registration'),
-	url(r'^home/$', views.home, name = 'home'),
 	url(r'^login/$', views.login, name = 'Login'),
 	url(r'^logout/$', views.logout, name = 'Logout'),
 	url(r'^upload/$', views.upload, name = 'Upload'),
-    url(r'^testgraph/$', views.test_graph,
-        name='Test_graph'),
 ]
 
 
