@@ -28,6 +28,7 @@ def register(request):
 			instance = form.save(commit = False)
 			instance.password = form.cleaned_data['email'] + "|" + form.cleaned_data['password']
 			instance.save()
+			os.system("mkdir " + os.getcwd() + '/media/' + form.cleaned_data['email'])
 			response = redirect('/upload')
 			response.set_cookie("username", form.cleaned_data['email'])
 			return response
@@ -115,15 +116,17 @@ def upload(request):
 			user_object = User.objects.get(email = username)
 			instance.email = user_object
 			instance.save()
-			audio_path=os.getcwd() + '/media/' + str(instance.name)
+			audio_path = os.getcwd() + '/media/' + str(instance.name)
 			api_id = '14800' #raw_input("Enter api user id for speechmatics :")
 			api_token = 'MzgxNjc2NDQtNjZkOS00NjY2LTgxNzQtZWM3NGZjZDZkNWYy' #raw_input("Enter api token for speechmatics :")
 			lang = "en-GB" #raw_input("Enter language code spoken(en-US/en-GB) :")
-			os.system("mkdir " + os.getcwd() + '/media/' + username)
-			os.system("python " + os.getcwd()+ "/irapp/speechmatics/speechmatics.py -f " + audio_path + " -l " + lang + " -i " + api_id + " -t " + api_token + " -x -o " + os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt')
+			os.system("mkdir " + os.getcwd() + '/media/' + username + '/' + str(instance.name)[6:-4])
+			os.system("python " + os.getcwd()+ "/irapp/speechmatics/speechmatics.py -f " + audio_path +
+					 " -l " + lang + " -i " + api_id + " -t " + api_token + " -x -o " + os.getcwd() +
+					  "/media/" + username + '/' + str(instance.name)[6:-4] + '/' + 'transcribed.txt')
 			d = {}
 			string = ''
-			transcribed_path = os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '.txt'
+			transcribed_path = os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '/' + 'transcribed.txt'
 			with open(transcribed_path ,'r') as f:
 				for line in f:
 					key = str(line.rstrip('\n'))
@@ -145,19 +148,16 @@ def upload(request):
 			with open(transcribed_path, 'w') as f:
 				f.write(summary)
 			audio_object = Audio.objects.get(name=instance.name)
-			summary_obj = Summary(name=username + '/' + str(instance.name)[6:-4] + '.txt', summaryId=audio_object)
+			summary_obj = Summary(name=username + '/' + str(instance.name)[6:-4] + '/' + 'transcribed.txt', summaryId=audio_object)
 			summary_obj.save()
 			graph_obj = svm.Svm()
 			details = graph_obj.call_multiple(d)
-			try:
-				sentiment_object = Sentiment.objects.get(sentimentId__email=user_object)
-			except Sentiment.DoesNotExist:
-				sentiment_object = Sentiment(sentimentId=audio_object)
+			sentiment_object = Sentiment(sentimentId=audio_object)
 			for i in details:
 				for key, val in i.items():
 					count_sentiment(sentiment_object, key, val)
 			sentiment_object.save()
-			csv_path = os.getcwd() + '/media' + '/data.csv'
+			csv_path = os.getcwd() + '/media/' + username + '/' + str(instance.name)[6:-4] + '/' + 'data.csv'
 			with open(csv_path , "w") as f:
 				f.write("State,Postive,Neutral,Negative\n")
 				if sentiment_object.ambience_count != 0:
@@ -184,7 +184,7 @@ def upload(request):
 													(sentiment_object.service_bad_count*100/sentiment_object.service_count)))
 				else:
 					f.write("Service,%s,%s,%s\n"%(0, 0, 0))
-			context = {"msg" : summary, "graph" : details}
+			context = {"msg" : summary, "path" : username+'/'+str(instance.name)[6:-4]}
 			response = render(request, "graph.html", context)
 			return response
 		else:
