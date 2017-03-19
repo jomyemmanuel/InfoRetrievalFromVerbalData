@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse,HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from .forms import UserForm, AudioForm
 from .models import User, Audio, Summary, Sentiment
 
@@ -9,7 +10,7 @@ from classifier import svm
 
 import subprocess
 import os
-
+import json
 # Create your views here.
 
 
@@ -97,7 +98,7 @@ def upload(request):
 					  "/media/" + username + '/' + str(instance.name)[6:-4] + '/' + 'transcribed.txt')
 			d = {}
 			string = ''
-			transcribed_path = os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '/' + 'transcribed.txt'
+			transcribed_path = os.getcwd()+"/media/"+username+'/'+str(instance.name)[6:-4]+'/'+'transcribed.txt'
 			try:
 				with open(transcribed_path ,'r') as f:
 					for line in f:
@@ -123,11 +124,17 @@ def upload(request):
 			with open(transcribed_path, 'w') as f:
 				f.write(summary)
 			audio_object = Audio.objects.get(name=instance.name)
-			summary_obj = Summary(name=username+'/'+str(instance.name)[6:-4]+'/'+'transcribed.txt', summaryId=audio_object)
+			summary_obj = Summary(
+				name=username+'/'+str(instance.name)[6:-4]+'/'+'transcribed.txt',
+				summaryId=audio_object
+			)
 			summary_obj.save()
 			graph_obj = svm.Svm()
 			details = graph_obj.call_multiple(d)
-			sentiment_object = Sentiment(name=username+'/'+str(instance.name)[6:-4]+'/'+'data.csv', sentimentId=audio_object)
+			sentiment_object = Sentiment(
+				name=username+'/'+str(instance.name)[6:-4]+'/'+'data.csv',
+				sentimentId=audio_object
+			)
 			sentiment_object.save()
 			sentiment_dict = {
 				'ambience_count':0, 'ambience_good_count':0, 'ambience_neutral_count':0, 'ambience_bad_count':0,
@@ -211,3 +218,26 @@ def dashboard(request):
 	else:
 		response = redirect('/')
 		return response
+
+@csrf_exempt
+def summaryAPI(request):
+	if request.method == 'POST':
+		json_data = json.loads(request.body)
+		resp = {'email':json_data['email'],'audio':json_data['audio']}
+		try:
+			req = User.objects.get(
+				email=json_data['email'],
+				password=json_data['email']+'|'+json_data['password']
+			)
+		except:
+			resp['error_message'] = "Invalid User Credentials !"
+			return HttpResponse(json.dumps(resp), content_type="application/json")
+		try:
+			aud = Audio.objects.get(email=req, name="audio/" + json_data['audio'])
+			with open(os.getcwd()+'/media/'+json_data['email']+'/'+json_data['audio'][:-4]+'/'+'transcribed.txt', 'r') as f:
+				string = f.read()
+			resp['summary'] = string
+		except:
+			resp['error_message'] = "Audio File Not Found For User !"
+			return HttpResponse(json.dumps(resp), content_type="application/json")
+	return HttpResponse(json.dumps(resp), content_type="application/json")

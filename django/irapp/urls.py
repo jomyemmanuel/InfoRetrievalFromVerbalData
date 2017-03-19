@@ -12,6 +12,7 @@ urlpatterns = [
 	url(r'^logout/$', views.logout, name = 'Logout'),
 	url(r'^upload/$', views.upload, name = 'Upload'),
 	url(r'^dashboard/$', views.dashboard, name = 'Dashboard'),
+	url(r'^summaryAPI/$', views.summaryAPI, name='summaryAPI'),
 ]
 
 
