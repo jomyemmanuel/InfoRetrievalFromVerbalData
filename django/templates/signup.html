@@ -1,90 +1,51 @@
 <!DOCTYPE html>
-<html >
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SignUp Form</title> 
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>SignUp</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/signin.css" rel="stylesheet">
+  <style type="text/css">
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      margin-top: 50px;
+    }
+  </style>
+
 </head>
 
 <body>
-  <html>
+  {% extends "base.html" %}
+  
+  {% block content %}
+  <div class="container">
 
-  <head>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
-    <style>
-    body {
-      display: flex;
-      min-height: 100vh;
-      flex-direction: column;
-    }
+    <form class="form-signin" action="/register/" method="post">{%csrf_token%}
+      <h3><div><b>{{ msg }}</b></div></h3>
+      <h2 class="form-signin-heading text-center">Sign Up</h2>
+      <label class="sr-only" for="id_firstname">First Name</label> 
+      <input id="id_firstname" maxlength="50" name="firstname" type="text" class="form-control" placeholder="First Name" required autofocus />
+      <label class="sr-only" for="id_lastname">Last Name</label> 
+      <input id="id_lastname" maxlength="50" name="lastname" type="text" class="form-control" placeholder="Last Name" required autofocus />
+      <label for="email" class="sr-only">Email</label>
+      <input class="form-control" type="email" name="email" placeholder="Email" required autofocus>
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="Password" required>
 
-    main {
-      flex: 1 0 auto;
-    }
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
 
-    body {
-      background: #fff;
-    }
-    </style>
-  </head>
-
-  <body>
-    <div class="section"></div>
-    <main>
-      <center>
-        <div class="section"></div>
-
-        <h5 class="indigo-text">Register</h5>
-        <div class="section"></div>
-
-        <div class="container">
-          <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
-
-            <form class="col s12" method="post" action="/register/" enctype="multipart/form-data" >{% csrf_token %}
-
-              <div class='row'>
-                <div class='input-field col s12'>
-                  <label class=" col-sm-2" for="id_firstname">First Name:</label> 
-                  <input id="id_firstname" maxlength="50" name="firstname" type="text" class="form-control" />
-                </div>
-              </div>
-              <div class='row'>
-                <div class='input-field col s12'>
-                  <label class=" col-sm-2" for="id_lastname">Last Name:</label> 
-                  <input id="id_lastname" maxlength="50" name="lastname" type="text" class="form-control" />
-                </div>
-              </div>
-              <div class='row'>
-                <div class='input-field col s12'>
-                  <label for="id_email" class=" col-sm-2" >Email:</label> 
-                  <input id="id_email" maxlength="200" name="email" type="text" class="form-control"/>
-                </div>
-              </div>
-              <div class='row'>
-                <div class='input-field col s12'>
-                 <label for="id_password" class=" col-sm-2">Password:</label>
-                 <input id="id_password" maxlength="200" name="password" type="password" class="form-control"/>
-               </div>
-             </div>
-             <br />
-             <center>
-              <div class='row'>
-                <button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect indigo'>Register</button>
-              </div>
-              <div class='pink-text'><b>{{ msg }}</b></div>
-            </center>
-          </form>
-        </div>
-      </div>
-      <a href="/login">Already Registered? Login Here</a>
-    </center>
-
-    <div class="section"></div>
-    <div class="section"></div>
-  </main>
-
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+  </div> <!-- /container -->
 </body>
-
 </html>
+{% endblock %}

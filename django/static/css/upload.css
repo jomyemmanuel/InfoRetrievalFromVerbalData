@@ -1,9 +1,16 @@
+html { 
+  background: url(/static/img/audio-mixer-wallpaper.jpg) no-repeat center center fixed !important; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 
 body {
-  background: #6dd7ff !important;
   font-family: 'Lato', sans-serif;
   color: #FDFCFB;
   text-align: center;
+  background-color : transparent;
 }
 
 

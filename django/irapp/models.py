@@ -17,6 +17,7 @@ class Audio(models.Model):
 	id = models.AutoField(primary_key=True)
 	name = models.FileField(upload_to="audio")
 	email = models.ForeignKey(User)
+	timestamp = models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
 		return self.name.name

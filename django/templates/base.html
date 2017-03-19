@@ -18,10 +18,14 @@
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/logout">Logout</a></li>
         </ul>     
-        {% else %}
+        {% elif request.path == "/login/" %}
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/register">Register</a></li>
-        </ul>      
+        </ul>  
+        {% else %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/login">Login</a></li>
+        </ul>     
         {% endif %}
       </div><!--/.nav-collapse -->
     </div>

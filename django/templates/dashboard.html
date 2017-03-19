@@ -16,6 +16,21 @@
 
 	<!-- Custom styles for this template -->
 	<link href="/static/css/dashboard.css" rel="stylesheet">
+	<style>
+
+	/*.axis .domain {
+	  display: none;
+	}*/
+	.fit{
+	    position: relative;
+	    display: table;
+	    overflow-y: auto;    
+	    overflow-x: auto;
+	    width: auto;
+	    min-width: 800px;   
+	}
+
+	</style>
 
 </head>
 
@@ -24,31 +39,16 @@
 	{% extends "base.html" %}
 	
 	{% block content %}
-	  {% if messages %}
-	      {% for message in messages %}
-	        {% if message.tags == "success" %}
-	          <div class="alert alert-success fade in text-center">
-	            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	            {{ message }}
-	          </div>
-	        {% else %}
-	           <div class="alert alert-danger fade in text-center">
-	            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	            {{ message }}
-	          </div>
-	        {% endif %}
-	      {% endfor %}
-	  {% endif %}
 	
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-12 col-sm-12 main">
+				<div class="col-md-8 col-sm-8 col-md-offset-2 col-sm-offset-2 main">
 					<div class="col-md-12 page-header col-sm-12">
 						<div class="col-md-6 col-sm-6">
-							<h1>Student List</h1>
+							<h1>Audios</h1>
 						</div>
-						<div class="col-md-2 col-md-offset-4 col-sm-2 col-sm-offset-4 sub">
-							<input class="btn btn-success" onClick="fun()" type='submit' value='Save Changes'/>
+						<div class="col-md-3 col-md-offset-3 col-sm-3 col-sm-offset-3 sub">
+							<a href="/upload"><button name="upload" class="btn btn-success" >Upload New Audio</button></a>
 						</div>
 					</div>
 					
@@ -56,97 +56,69 @@
     
 				<form type="get" action=".">
 					<div class="row">
-						<div class="col-md-11 col-sm-11">
-							<input type="text" name="q" value="{{q}}" class="form-control"  placeholder="Search..."> <br>
-						</div>
-						<div class="col-md-1 col-sm-1">	
-							<button class="btn btn-default" type="submit">Search</button>
+						<div class="col-md-12 col-sm-12">
+							<input type="text" id="search" class="form-control"  placeholder="Search..."> <br>
 						</div>
 					</div>
 				</form>
 
-				<form id="form1" action="{%url 'studentListSave' %}" method="post">{% csrf_token %}
 
-					<div class="table-responsive">
-						<table class="table table-striped tab">
-							<thead class="thead-inverse">
-								<tr>
-									<th>Admission No.</th>
-									<th>Name</th>
-									<th>Type</th>
-									<th>Course</th>
-									<th>Branch</th>
-									<th>Class</th>
-									<th>Roll No.</th>
-									<th></th>
-									<th></th>
-								</tr>
-							</thead>
+				<div class="table-responsive">
+					<table class="table table-striped tab">
+						<thead class="thead-inverse">
+							<tr>
+								<th>Audio</th>
+								<th>Summary</th>
+								<th>Graph</th>
+								<th>Uploaded Date</th>
+							</tr>
+						</thead>
 
-							<tbody>
-								{%for i in object_list%}
-								<tr data-id="{{i.pk}}">
-									<td>{{i.admissionNumber}}</td>
-									<td>{{i.name}}</td>
-									<td>{{i.typ}}</td>
-									<td>{{i.course}}</td>
-									<td>{{i.branch}}</td>
-									<td>
-								  		<select class="form-control" name="clss{{i.pk}}" id="clss{{i.pk}}" ><label for="clss{{i.pk}}">
-										  <option class="hide" value="{{i.clss}}">{{i.clss}}</option>
-										  <option value="CSA">CSA</option>
-										  <option value="CSB">CSB</option>
-										  <option value="ECA">ECA</option>
-										  <option value="ECB">ECB</option>
-										  <option value="EEA">EEA</option>
-										  <option value="EBA">EBA</option>
-										</select>
-									 </td>
-									<td><label for="rollno{{i.pk}}"></label><input type="text" name="rollno{{i.pk}}" id="rollno{{i.pk}}" value="{{i.rollno}}"/ style="width:70px;"></td>
-									<td><a href="/studentEdit/{{i.pk}}"><button class="btn btn-primary" type="button">Edit</button></a></td>
-									<td><button name="adm" class="btnDelete btn btn-danger">Delete</button></td>
-								</tr>
-								{%endfor%}
-							</tbody>
-						</table>
-					</div>
-					<div class="pagination">
-						<span class="step-links">
-							{% if object_list.has_previous %}
-							<a href="?page={{ object_list.previous_page_number }}">previous</a>
-							{% endif %}
-
-							<span class="current">
-								Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
-							</span>
-
-							{% if object_list.has_next %}
-							<a href="?page={{ object_list.next_page_number }}">next</a>
-							{% endif %}
-						</span>
-					</div>	
+						<tbody>
+							{% for i in data %}
+							<tr>
+								<td><a href="/media/audio/{{i.0}}">{{i.0}}</a></td>
+								<td><button value="/media/{{i.1}}" class="btnSummary btn btn-warning" type="button">View</button></td>
+								<td><button name="adm" value="/media/{{i.2}}" class="btnGraph btn btn-info" type="button">View</button></td>
+								<td>{{i.3}}</td>
+							</tr>
+							{%endfor%}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
-	</form>
+	</div>
 
-	<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="graph" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-dialog fit">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                 <h3 class="modal-title" id="myModalLabel">Graph</h3>
+	            </div>
+	            <div class="modal-body">
+	            	<svg width="960" height="500"></svg>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="modal fade" id="summary" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	    <div class="modal-dialog">
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	                 <h3 class="modal-title" id="myModalLabel">Warning!</h3>
+	                 <h3 class="modal-title" id="myModalLabel">Summary</h3>
 	            </div>
-	            <div class="modal-body">
-	            	<form id="form2" action="{%url 'studentDelete' %}" method="post">{% csrf_token %}
-	            		<label for="adm"></label>
-	            		<input class="hide" id="adm" type="text" name="adm" value="2">
-	            	</form>
-	                 <h4> Are you sure you want to DELETE?</h4>
+	            <div class="modal-body" id="content">
+	            	
 	            </div>
 	            <div class="modal-footer">
-	                <button type="submit" name="adm" class="btn btn-danger" id="delete" >Yes</button>
-	                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	            </div>
 	        </div>
 	    </div>
@@ -159,28 +131,119 @@
     
     <script src="/static/js/jquery.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
-    <!-- <script src="/static/js/search.js"></script> -->
+    <script src="/static/js/search.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript">
 
-	$('button.btnDelete').on('click', function(e){
-	    e.preventDefault();
-	    var id = $(this).closest('tr').data('id');
-	    $('#confirm').data('id', id).modal('show');
+    $('button.btnSummary').on('click', function(e){
+	    var link = $(this).attr("value");
+	    $('#summary').modal('show');
+        $.ajax({
+            url : link,
+            dataType: "text",
+            success : function (data) {
+                $('#content').text(data);
+            }
+        });
 	});
 
-	$("#delete").click(function () {
-	    var id = $('#confirm').data('id');
-	    $('input[name="adm"]')
-	    	.attr("value", $('[data-id=' + id + ']')
-	    	.closest('tr').find('td:eq(0)').text());
-	    $("#form2").submit();
-	    $('#confirm').modal('hide');
+	$('button.btnGraph').on('click', function(e){
+	    var link = $(this).attr("value");
+	    generate(link)
+	    $('#graph').modal('show');
 	});
 
-	function fun(){
-		$("#form1").submit();
-	}
-    </script>
+	function generate(link) {
+		d3.selectAll("svg > *").remove();
+    	var svg = d3.select("svg"),
+	    margin = {top: 20, right: 20, bottom: 30, left: 40},
+	    width = +svg.attr("width") - margin.left - margin.right,
+	    height = +svg.attr("height") - margin.top - margin.bottom,
+	    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		var x0 = d3.scaleBand()
+		    .rangeRound([0, width])
+		    .paddingInner(0.1);
+
+		var x1 = d3.scaleBand()
+		    .padding(0.05);
+
+		var y = d3.scaleLinear()
+		    .rangeRound([height, 0]);
+
+		var z = d3.scaleOrdinal()
+		    .range(["#4CAF50", "#F57C00", "#D32F2F"]);
+		
+		console.log(link);
+		var path = link
+		d3.csv(path, function(d, i, columns) {
+		  for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
+		  return d;
+		}, function(error, data) {
+		  if (error) throw error;
+
+		  var keys = data.columns.slice(1);
+
+		  x0.domain(data.map(function(d) { return d.State; }));
+		  x1.domain(keys).rangeRound([0, x0.bandwidth()]);
+		  y.domain([0, d3.max(data, function(d) { return d3.max(keys, function(key) { return 100; }); })]).nice();
+
+		  g.append("g")
+		    .selectAll("g")
+		    .data(data)
+		    .enter().append("g")
+		      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; })
+		    .selectAll("rect")
+		    .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
+		    .enter().append("rect")
+		      .attr("x", function(d) { return x1(d.key); })
+		      .attr("y", function(d) { return y(d.value); })
+		      .attr("width", x1.bandwidth())
+		      .attr("height", function(d) { return height - y(d.value); })
+		      .attr("fill", function(d) { return z(d.key); });
+
+		  g.append("g")
+		      .attr("class", "axis")
+		      .attr("transform", "translate(0," + height + ")")
+		      .call(d3.axisBottom(x0));
+
+		  g.append("g")
+		      .attr("class", "axis")
+		      .call(d3.axisLeft(y).ticks(null, "s"))
+		    .append("text")
+		      .attr("x", 2)
+		      .attr("y", y(y.ticks().pop()) + 0.5)
+		      .attr("dy", "0.32em")
+		      .attr("fill", "#000")
+		      .attr("font-weight", "bold")
+		      .attr("text-anchor", "start")
+		      .text("Sentiment(%)");
+
+		  var legend = g.append("g")
+		      .attr("font-family", "sans-serif")
+		      .attr("font-size", 10)
+		      .attr("text-anchor", "end")
+		    .selectAll("g")
+		    .data(keys.slice().reverse())
+		    .enter().append("g")
+		      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+		  legend.append("rect")
+		      .attr("x", width - 19)
+		      .attr("width", 19)
+		      .attr("height", 19)
+		      .attr("fill", z);
+
+		  legend.append("text")
+		      .attr("x", width - 24)
+		      .attr("y", 9.5)
+		      .attr("dy", "0.32em")
+		      .text(function(d) { return d; });
+		});
+
+		}
+
+	</script>
 </body>
 </html>
 

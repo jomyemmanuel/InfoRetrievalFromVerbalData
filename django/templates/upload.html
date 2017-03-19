@@ -2,25 +2,50 @@
   <head>
     <meta charset="utf-8">
     <title>Upload</title>
-    <link rel="stylesheet" href="/static/css/upload.css">
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/upload.css">
+    <style type="text/css">
+      #loading {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        opacity: .95;
+        background: url('/static/img/giphy.gif')50% 50% no-repeat rgb(249,249,249);
+    `}
+    </style>
   </head>
   <body>
     
   {% extends "base.html" %}
   
   {% block content %}
-   <form method="post"	action="/upload/" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+  <div id="loading"></div>
+   <form method="post" id="form1"	action="/upload/" enctype="multipart/form-data" class="post-form">{% csrf_token %}
       <div class="header">
          <p class="center">Upload Your Audio File</p>
       </div>
       <div class="input">
         <label class="custom-file-upload" for="id_name"></label>
         <input class="button" id="id_name" name="name" type="file" required />
-        <input type="submit" class="button" id="submit" value="Upload">
+        <input type="submit" class="button" id="submit" value="Upload" onclick="myFunction()">
       </div>
     </form>
     {{ msg }}
   </body>
+  <script src="/static/js/jquery.js"></script>
+  <script type="text/javascript">
+  $(window).ready(function() {
+      $('#loading').hide();
+  });
+  function myFunction(){
+    var fileName = $("#id_name").val();
+    if(fileName) { 
+        $('#loading').show();
+    } 
+  }
+  </script>
 </html>
 {% endblock %}

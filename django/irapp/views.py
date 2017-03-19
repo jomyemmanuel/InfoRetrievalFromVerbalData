@@ -52,7 +52,7 @@ def login(request):
 			context = {"msg" : "Invalid User!!"}
 			response = render(request, "login.html", context)
 			return response		
-		response = redirect('/upload')
+		response = redirect('/dashboard')
 		response.set_cookie("username", a[0])
 		return response
 	else:
@@ -70,38 +70,9 @@ def logout(request):
 	return HttpResponseRedirect('/')
 
 def count_sentiment(obj, key, val):
-	if key == 'food':
-		obj.food_count += 1
-		if val == 'good':
-			obj.food_good_count += 1
-		if val == 'bad':
-			obj.food_bad_count += 1
-		if val == 'neutral':
-			obj.food_neutral_count += 1
-	if key == 'ambience':
-		obj.ambience_count += 1
-		if val == 'good':
-			obj.ambience_good_count += 1
-		if val == 'bad':
-			obj.ambience_bad_count += 1
-		if val == 'neutral':
-			obj.ambience_neutral_count += 1
-	if key == 'service':
-		obj.service_count += 1
-		if val == 'good':
-			obj.service_good_count += 1
-		if val == 'bad':
-			obj.service_bad_count += 1
-		if val == 'neutral':
-			obj.service_neutral_count += 1
-	if key == 'cost':
-		obj.cost_count += 1
-		if val == 'good':
-			obj.cost_good_count += 1
-		if val == 'bad':
-			obj.cost_bad_count += 1
-		if val == 'neutral':
-			obj.cost_neutral_count += 1
+	obj['%s_count'%key] += 1
+	obj['%s_%s_count'%(key, val)] += 1
+	return obj
 
 def upload(request):
 	if 'username' in request.COOKIES:
@@ -127,18 +98,22 @@ def upload(request):
 			d = {}
 			string = ''
 			transcribed_path = os.getcwd() + "/media/" + username + '/' + str(instance.name)[6:-4] + '/' + 'transcribed.txt'
-			with open(transcribed_path ,'r') as f:
-				for line in f:
-					key = str(line.rstrip('\n'))
-					line = f.next()
-					if not line:
-						break
-					val = str(line.rstrip('\n'))
-					if key not in d.keys():
-						d[key] = val
-					else:
-						d[key] += val
-					string += val
+			try:
+				with open(transcribed_path ,'r') as f:
+					for line in f:
+						key = str(line.rstrip('\n'))
+						line = f.next()
+						if not line:
+							break
+						val = str(line.rstrip('\n'))
+						if key not in d.keys():
+							d[key] = val
+						else:
+							d[key] += val
+						string += val
+			except IOError:
+				response = render(request, "404.html")
+				return response
 			d['summary'] = string
 			with open(transcribed_path, 'w') as f:
 				f.write(string + '\n.\n')
@@ -148,49 +123,63 @@ def upload(request):
 			with open(transcribed_path, 'w') as f:
 				f.write(summary)
 			audio_object = Audio.objects.get(name=instance.name)
-			summary_obj = Summary(name=username + '/' + str(instance.name)[6:-4] + '/' + 'transcribed.txt', summaryId=audio_object)
+			summary_obj = Summary(name=username+'/'+str(instance.name)[6:-4]+'/'+'transcribed.txt', summaryId=audio_object)
 			summary_obj.save()
 			graph_obj = svm.Svm()
 			details = graph_obj.call_multiple(d)
-			sentiment_object = Sentiment(name=username + '/' + str(instance.name)[6:-4] + '/' + 'data.csv', sentimentId=audio_object)
+			sentiment_object = Sentiment(name=username+'/'+str(instance.name)[6:-4]+'/'+'data.csv', sentimentId=audio_object)
+			sentiment_object.save()
+			sentiment_dict = {
+				'ambience_count':0, 'ambience_good_count':0, 'ambience_neutral_count':0, 'ambience_bad_count':0,
+				'cost_count':0, 'cost_good_count':0, 'cost_neutral_count':0, 'cost_bad_count':0,
+				'food_count':0, 'food_good_count':0, 'food_neutral_count':0, 'food_bad_count':0,
+				'service_count':0, 'service_good_count':0, 'service_neutral_count':0, 'service_bad_count':0
+			}
 			for i in details:
 				for key, val in i.items():
-					count_sentiment(sentiment_object, key, val)
-			sentiment_object.save()
+					sentiment_dict = count_sentiment(sentiment_dict, key, val)
 			csv_path = os.getcwd() + '/media/' + username + '/' + str(instance.name)[6:-4] + '/' + 'data.csv'
 			with open(csv_path , "w") as f:
 				f.write("State,Postive,Neutral,Negative\n")
-				if sentiment_object.ambience_count != 0:
-					f.write("Ambience,%s,%s,%s\n"%((sentiment_object.ambience_good_count*100/sentiment_object.ambience_count),
-													(sentiment_object.ambience_neutral_count*100/sentiment_object.ambience_count),
-													(sentiment_object.ambience_bad_count*100/sentiment_object.ambience_count)))
+				if sentiment_dict['ambience_count'] != 0:
+					f.write("Ambience,%s,%s,%s\n"%(
+						(sentiment_dict['ambience_good_count']*100/sentiment_dict['ambience_count']),
+						(sentiment_dict['ambience_neutral_count']*100/sentiment_dict['ambience_count']),
+						(sentiment_dict['ambience_bad_count']*100/sentiment_dict['ambience_count']))
+					)
 				else:
 					f.write("Ambience,%s,%s,%s\n"%(0, 0, 0))
-				if sentiment_object.cost_count != 0:
-					f.write("Cost,%s,%s,%s\n"%((sentiment_object.cost_good_count*100/sentiment_object.cost_count),
-												(sentiment_object.cost_neutral_count*100/sentiment_object.cost_count),
-												(sentiment_object.cost_bad_count*100/sentiment_object.cost_count)))
+				if sentiment_dict['cost_count'] != 0:
+					f.write("Cost,%s,%s,%s\n"%(
+						(sentiment_dict['cost_good_count']*100/sentiment_dict['cost_count']),
+						(sentiment_dict['cost_neutral_count']*100/sentiment_dict['cost_count']),
+						(sentiment_dict['cost_bad_count']*100/sentiment_dict['cost_count']))
+					)
 				else:
 					f.write("Cost,%s,%s,%s\n"%(0, 0, 0))
-				if sentiment_object.food_count != 0:
-					f.write("Food,%s,%s,%s\n"%((sentiment_object.food_good_count*100/sentiment_object.food_count),
-												(sentiment_object.food_neutral_count*100/sentiment_object.food_count),
-												(sentiment_object.food_bad_count*100/sentiment_object.food_count)))
+				if sentiment_dict['food_count'] != 0:
+					f.write("Food,%s,%s,%s\n"%(
+						(sentiment_dict['food_good_count']*100/sentiment_dict['food_count']),
+						(sentiment_dict['food_neutral_count']*100/sentiment_dict['food_count']),
+						(sentiment_dict['food_bad_count']*100/sentiment_dict['food_count']))
+					)
 				else:
 					f.write("Food,%s,%s,%s\n"%(0, 0, 0))
-				if sentiment_object.service_count != 0:
-					f.write("Service,%s,%s,%s\n"%((sentiment_object.service_good_count*100/sentiment_object.service_count),
-													(sentiment_object.service_neutral_count*100/sentiment_object.service_count),
-													(sentiment_object.service_bad_count*100/sentiment_object.service_count)))
+				if sentiment_dict['service_count'] != 0:
+					f.write("Service,%s,%s,%s\n"%(
+						(sentiment_dict['service_good_count']*100/sentiment_dict['service_count']),
+						(sentiment_dict['service_neutral_count']*100/sentiment_dict['service_count']),
+						(sentiment_dict['service_bad_count']*100/sentiment_dict['service_count']))
+					)
 				else:
 					f.write("Service,%s,%s,%s\n"%(0, 0, 0))
-			context = {"msg" : summary, "path" : username+'/'+str(instance.name)[6:-4]}
+			context = {"summary" : summary, "path" : username+'/'+str(instance.name)[6:-4]}
 			response = render(request, "graph.html", context)
 			return response
 		else:
 			form = AudioForm()
 			context = {"form" : form, "msg" : "Form not valid"}
-			return render(request, "graph.html", context)
+			return render(request, "upload.html", context)
 	else:
 		form = AudioForm()
 		context = {"form" : form}
@@ -202,12 +191,23 @@ def dashboard(request):
 	else:
 		return HttpResponseRedirect('/login')
 	if request.method == 'GET':
-		audio_object = Audio.objects.filter(email=username)
+		audio_object = Audio.objects.filter(email=username).order_by('-timestamp')
+		data = []
+		index = 0
 		for elm in audio_object:
+			obj_list = []
 			summary_obj = Summary.objects.filter(summaryId=elm)
 			sentiment_obj = Sentiment.objects.filter(sentimentId=elm)
-			print summary_obj[0]
-			print sentiment_obj[0]['food_count']
+			obj_list.append(str(elm)[6:])
+			if summary_obj and sentiment_obj:
+				obj_list.append(summary_obj[0])
+				obj_list.append(sentiment_obj[0])
+				time = audio_object.values()[index]['timestamp']
+				obj_list.append(time)
+				data.append(obj_list)
+			index += 1
+		context = {'data' : data}
+		return render(request, "dashboard.html", context)
 	else:
 		response = redirect('/')
 		return response
