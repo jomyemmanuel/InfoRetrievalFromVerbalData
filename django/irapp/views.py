@@ -43,7 +43,7 @@ def register(request):
 def login(request):
 	if 'username' in request.COOKIES:
 		username = request.COOKIES['username']
-		return HttpResponseRedirect('/')
+		return HttpResponseRedirect('/upload')
 	if request.method == 'POST':
 		pas = request.POST['email'] + "|" + request.POST['password']
 		a = User.objects.filter(email = request.POST['email'])
@@ -152,7 +152,7 @@ def upload(request):
 			summary_obj.save()
 			graph_obj = svm.Svm()
 			details = graph_obj.call_multiple(d)
-			sentiment_object = Sentiment(sentimentId=audio_object)
+			sentiment_object = Sentiment(name=username + '/' + str(instance.name)[6:-4] + '/' + 'data.csv', sentimentId=audio_object)
 			for i in details:
 				for key, val in i.items():
 					count_sentiment(sentiment_object, key, val)
@@ -195,3 +195,19 @@ def upload(request):
 		form = AudioForm()
 		context = {"form" : form}
 		return render(request, "upload.html", context)
+
+def dashboard(request):
+	if 'username' in request.COOKIES:
+		username = request.COOKIES['username']
+	else:
+		return HttpResponseRedirect('/login')
+	if request.method == 'GET':
+		audio_object = Audio.objects.filter(email=username)
+		for elm in audio_object:
+			summary_obj = Summary.objects.filter(summaryId=elm)
+			sentiment_obj = Sentiment.objects.filter(sentimentId=elm)
+			print summary_obj[0]
+			print sentiment_obj[0]['food_count']
+	else:
+		response = redirect('/')
+		return response

@@ -1,26 +1,30 @@
-<nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">Home</a>
-      {% if request.COOKIES.username %}
-      <ul class="right hide-on-med-and-down">
-        <li><a href="/logout">logout</a></li>
-      </ul>
-      {% else %}
-      <ul class="right hide-on-med-and-down">
-        <li><a href="/login">login</a></li>
-      </ul>
-      {% endif %}
 
-      {% if request.COOKIES.username %}
-      <ul id="nav-mobile" class="side-nav">
-        <li><a href="/login">login</a></li>
-      </ul>
-      {% else %}
-      <ul id="nav-mobile" class="side-nav">
-        <li><a href="/logout">logout</a></li>
-      </ul>
-      {% endif %}
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Home</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="/dashboard">Dashboard</a></li>
+        </ul>
+        {% if request.COOKIES.username %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/logout">Logout</a></li>
+        </ul>     
+        {% else %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/register">Register</a></li>
+        </ul>      
+        {% endif %}
+      </div><!--/.nav-collapse -->
     </div>
   </nav>
-  {% block content %}
-  {% endblock %}
+{% block content %}
+{% endblock %}

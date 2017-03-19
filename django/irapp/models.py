@@ -33,22 +33,7 @@ class Summary(models.Model):
 
 class Sentiment(models.Model):
 	sentimentId = models.ForeignKey(Audio)
-	food_count = models.IntegerField(default=0)
-	food_good_count = models.IntegerField(default=0)
-	food_bad_count = models.IntegerField(default=0)
-	food_neutral_count = models.IntegerField(default=0)
-	ambience_count = models.IntegerField(default=0)
-	ambience_good_count = models.IntegerField(default=0)
-	ambience_bad_count = models.IntegerField(default=0)
-	ambience_neutral_count = models.IntegerField(default=0)
-	service_count = models.IntegerField(default=0)
-	service_good_count = models.IntegerField(default=0)
-	service_bad_count = models.IntegerField(default=0)
-	service_neutral_count = models.IntegerField(default=0)
-	cost_count = models.IntegerField(default=0)
-	cost_good_count = models.IntegerField(default=0)
-	cost_bad_count = models.IntegerField(default=0)
-	cost_neutral_count = models.IntegerField(default=0)
+	name = models.FileField(upload_to=get_upload_to)
 	
 	def __unicode__(self):
-	   	return str(self.food_count)
+	   	return self.name.name
