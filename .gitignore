@@ -1,0 +1,8 @@
+*.pyc
+db.sqlite3
+*.mp3
+*.wav
+django/irapp/migrations/*
+speech-to-text-wavenet/
+django/media/*
+my_dumped_classifier.pkl
