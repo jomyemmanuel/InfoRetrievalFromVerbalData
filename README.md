@@ -5,7 +5,7 @@ This repo is no longer maintained.
 A web application that analyses the content of spoken reviews on restaurants by mining data from the transcribed/text version of spoken audio using standard summarization algorithms like Text-Tiling & Cluster-Rank to efficiently summarize the content . It also identifies the overall sentiment (good/neutral/bad) behind the spoken content and identifies the topic (food/ambience/service/cost) by using trained Support Vector Machine Classifers.
 
 ### Local Installation (Ubuntu)
-1. `virtualenv .` [virtualenv](virtualenv)
+1. `virtualenv .` ([virtualenv](virtualenv))
 2. `source bin/activate`
 3. `pip install -r requirements.txt`
 4. `cd django`
